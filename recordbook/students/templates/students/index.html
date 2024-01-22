@@ -2,14 +2,14 @@
 
 {% block content %}
     <h1>{{ title }}</h1>
-    Содержимое главной страницы
         <ul>
         {% for st in students %}
             <li>
                 {{ st.first_name }}
-                {{ st.last_name }}
+                {{ st.last_name | upper }}
                 {{ st.middle_name }}
             </li>
         {% endfor %}
         </ul>
+        <p> Всего студентов: {{ students | length }}</p>
 {% endblock %}
