@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 # Create your views here.
 from django.http import HttpResponse
 from .models import Student
@@ -37,3 +37,13 @@ def teachers(request):
 
 def login(request):
     return HttpResponse("Авторизация")
+
+def show_student(request, stud_slug):
+    #return HttpResponse(f"Отображение студента с id = {stud_id}")
+    student = get_object_or_404(Student, slug=stud_slug)
+
+    context = {
+        'st': student,
+        'menu': menu,
+    }
+    return render(request, 'students/student.html', context=context)

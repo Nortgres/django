@@ -1,0 +1,15 @@
+{% extends 'students/base.html' %}
+
+{% block content %}
+<h1>{{ st.last_name }} {{ st.first_name }} {{ st.middle_name }}</h1>
+
+{% if st.photo %}
+    <p><img src="{{ st.photo.url }}" alt="Student photo"></p>
+{% endif %}
+
+<p>Дата рождения: {{ st.birth_date }}</p>
+<p>email: {{ st.email }}</p>
+<p>Группа: {{ st.group }}</p>
+<p>Запись добавлена: {{ st.created_at | date:"d E Y" }}</p>
+
+{% endblock %}

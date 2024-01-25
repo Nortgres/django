@@ -5,9 +5,12 @@
         <ul>
         {% for st in students %}
             <li>
-                {{ st.first_name }}
-                {{ st.last_name | upper }}
-                {{ st.middle_name }}
+                <a href="{{ st.get_absolute_url }}">
+                    {{st.first_name }}
+                    {{ st.last_name | upper }}
+                    {{ st.middle_name }}
+                </a>
+                {{ st.group.course }}-{{ st.group.name }}
             </li>
         {% endfor %}
         </ul>
