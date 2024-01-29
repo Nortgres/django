@@ -15,4 +15,5 @@
         {% endfor %}
         </ul>
         <p> Всего студентов: {{ students | length }}</p>
+        <p><a href="{% url 'addstudent' %}">Добавить студента</a> </p>
 {% endblock %}
