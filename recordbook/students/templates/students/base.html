@@ -17,10 +17,15 @@
             <li><a href="{% url m.url_name%}">{{ m.title }} </a></li>
         {% endfor %}
         <li class="last">
-            <a href="{% url 'register' %}">Регистрация</a> | <a href="{% url 'login' %}">Войти</a>
+            {% if request.user.is_authenticated %}
+                <li class="last"> {{user.username}} | <a href="{% url 'logout' %}">Выйти</a> </li>
+            {% else %}
+                <li class="last"><a href="{% url 'register' %}">Регистрация</a> | <a href="{% url 'login' %}">Войти</a> </li>
+            {% endif %}
         </li>
     </ul>
     </div>
+
     {% endblock mainmenu %}
     {% block content %}
     {% endblock content %}
