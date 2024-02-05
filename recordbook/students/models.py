@@ -13,7 +13,7 @@ class Student(models.Model):
     updated_at = models.DateTimeField(verbose_name='Дата изменения', auto_now=True)
     is_study = models.BooleanField(verbose_name='Учится', default=True)
     photo = models.ImageField(verbose_name='Фото', upload_to="photos/%Y/%m/%d")
-    group = models.ForeignKey('Group', on_delete=models.CASCADE, verbose_name='Группа')
+    group = models.ForeignKey('Group', on_delete=models.CASCADE, verbose_name='Группа', related_name='get_students')
     slug = models.SlugField(verbose_name='URL', max_length=255, unique=True, db_index=True)
 
     def __str__(self):
