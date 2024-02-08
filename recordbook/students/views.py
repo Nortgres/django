@@ -154,7 +154,7 @@ def logout_user(request):
 
 class DeleteStudent(LoginRequiredMixin, DataMixin, DeleteView):
     model = Student
-    template_name = 'student/delete_student.html'
+    template_name = 'students/delete_student.html'
     success_url = reverse_lazy('home')
     context_object_name = 'st'
 

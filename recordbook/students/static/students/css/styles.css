@@ -112,31 +112,36 @@ ul.mainmenu li a:hover {
     padding: 0;
     color: #CC0000;
 }
+
 .warning a {
     color: red;
 }
+
 .center {
-    display: flex:
+    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 70vh;
 }
+
 .card {
     border: solid 1px #f2f2f2;
     padding: 1rem;
     border-radius: 5px;
-    box-shadow: rgb(11 43 158 / 15%) 0px 6px 20px -6px:
+    box-shadow: rgb(11 43 158 / 15%) 0px 6px 20px -6px;
     min-width: 400px;
 }
+
 .form-buttons {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 0.75rem;
 }
+
 .btn {
-    padding: 0.25rem 075rem:
+    padding: 0.25rem 0.75rem;
     border-radius: 5px;
     background-color: #ffffff;
     border: solid 1px #ffffff;
