@@ -45,3 +45,9 @@ class RegisterUserForm(UserCreationForm):
 class LoginUserForm(AuthenticationForm):
     username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'class': 'form-input'}))
     password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+
+
+class FilterStudentForm(forms.Form):
+    last_name = forms.CharField(label='Фамилия', max_length=50, required=False)
+    first_name = forms.CharField(label='Имя', max_length=50, required=False)
+    group = forms.ModelChoiceField(label='Группа', queryset=Group.objects.all(), empty_label='', required=False)

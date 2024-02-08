@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path
 
 from .views import groups, about, students, teachers, login, show_student, addstudent, StudentHome, ShowStudent, \
-    AddStudent, RegisterUser, LoginUser, logout_user
+    AddStudent, RegisterUser, LoginUser, logout_user, DeleteStudent
 
 urlpatterns = [
 ##    path('', index, name='home'),
@@ -18,4 +18,5 @@ urlpatterns = [
     path('', StudentHome.as_view(), name='home'),
     path('register/', RegisterUser.as_view(), name='register'),
     path('logout/', logout_user, name='logout'),
+    path('student/<int:pk>/delete/', DeleteStudent.as_view(), name="delete_student"),
 ]
