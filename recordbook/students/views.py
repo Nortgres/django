@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 # Create your views here.
 from django.http import HttpResponse
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
 
 from .filters import StudentFilter
 from .forms import AddStudentForm, RegisterUserForm, LoginUserForm, FilterStudentForm
@@ -161,4 +161,16 @@ class DeleteStudent(LoginRequiredMixin, DataMixin, DeleteView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title='Удалить студента')
+        return {**context, **c_def}
+
+
+class UpdateStudent(LoginRequiredMixin, DataMixin, UpdateView):
+    model = Student
+    form_class = AddStudentForm
+    template_name = 'students/update_student.html'
+    context_object_name = 'st'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title='Изменить студента')
         return {**context, **c_def}

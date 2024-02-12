@@ -1,13 +1,14 @@
 from typing import Tuple
 
 from django.contrib import admin
-from .models import Student, Group
+from .models import Student, Group, Subject, Teacher, Gradebook
 
 # Register your models here.
 
 #admin.site.register(Student)
 admin.site.register(Group)
 
+@admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
     list_display = ('id', 'last_name', 'first_name', 'created_at', 'is_study', 'photo')
     list_display_links = ('id', 'last_name')
@@ -16,4 +17,30 @@ class StudentAdmin(admin.ModelAdmin):
     list_filter = ('is_study', 'created_at')
     prepopulated_fields = {"slug": ("last_name", )}
 
-admin.site.register(Student, StudentAdmin)
+#admin.site.register(Student, StudentAdmin)
+
+@admin.register(Teacher)
+class TeacherAdmin(admin.ModelAdmin):
+    list_display = ('id', 'last_name', 'first_name', 'created_at', 'photo')
+    list_display_links = ('id', 'last_name')
+    search_fields = ('last_name', 'first_name')
+    prepopulated_fields = {"slug": ("last_name",)}
+
+@admin.register(Subject)
+class SubjectAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'teacher')
+    list_display_links = ('id', 'name')
+    search_fields = ('name')
+
+@admin.register(Gradebook)
+class GradebookAdmin(admin.ModelAdmin):
+    list_display = ('id', 'subject', 'student', 'date', 'mark')
+    list_display_links = ('id', 'subject')
+    search_fields = ('subject', 'student')
+    list_filter = ('subject', 'student')
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(GradebookAdmin, self).get_form(request. obj, **kwargs)
+        if obj:
+            form.base_fields['student'].queryset = Student.objects.filter(group_id__in=obj.subject.groups.all())
+            return form
