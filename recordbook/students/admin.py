@@ -30,7 +30,7 @@ class TeacherAdmin(admin.ModelAdmin):
 class SubjectAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'teacher')
     list_display_links = ('id', 'name')
-    search_fields = ('name')
+    search_fields = ('name',)
 
 @admin.register(Gradebook)
 class GradebookAdmin(admin.ModelAdmin):
