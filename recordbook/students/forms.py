@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
-from students.models import Group, Student
+from students.models import Group, Student, Subject
 
 
 #class AddStudentForm(forms.Form):
@@ -51,3 +51,18 @@ class FilterStudentForm(forms.Form):
     last_name = forms.CharField(label='Фамилия', max_length=50, required=False)
     first_name = forms.CharField(label='Имя', max_length=50, required=False)
     group = forms.ModelChoiceField(label='Группа', queryset=Group.objects.all(), empty_label='', required=False)
+
+class ChooseGroupForm(forms.Form):
+    group = forms.ModelChoiceField(label='Группа',
+    queryset=Group.objects.all(), empty_label='Не выбрана', required=False)
+
+class ChooseSubjectForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        self.group = kwargs.pop('group', None)
+        super(ChooseSubjectForm, self).__init__(*args, **kwargs)
+        if self.group:
+            group = Group.objects.filter(id=self.group)[0]
+            self.fields['subject'].quryset = group.subject_set.all()
+
+    subject = forms.ModelChoiceField(label='Предмет',
+queryset=Subject.objects.none(), empty_label='Не выбран', required=False)

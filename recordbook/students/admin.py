@@ -40,7 +40,7 @@ class GradebookAdmin(admin.ModelAdmin):
     list_filter = ('subject', 'student')
 
     def get_form(self, request, obj=None, **kwargs):
-        form = super(GradebookAdmin, self).get_form(request. obj, **kwargs)
+        form = super(GradebookAdmin, self).get_form(request, obj, **kwargs)
         if obj:
             form.base_fields['student'].queryset = Student.objects.filter(group_id__in=obj.subject.groups.all())
-            return form
+        return form
