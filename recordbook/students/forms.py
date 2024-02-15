@@ -54,7 +54,7 @@ class FilterStudentForm(forms.Form):
 
 class ChooseGroupForm(forms.Form):
     group = forms.ModelChoiceField(label='Группа',
-    queryset=Group.objects.all(), empty_label='Не выбрана', required=False)
+queryset=Group.objects.all(), empty_label='Не выбрана', required=False)
 
 class ChooseSubjectForm(forms.Form):
     def __init__(self, *args, **kwargs):
