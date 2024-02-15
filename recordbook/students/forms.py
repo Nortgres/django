@@ -62,7 +62,7 @@ class ChooseSubjectForm(forms.Form):
         super(ChooseSubjectForm, self).__init__(*args, **kwargs)
         if self.group:
             group = Group.objects.filter(id=self.group)[0]
-            self.fields['subject'].quryset = group.subject_set.all()
+            self.fields['subject'].queryset = group.subject_set.all()
 
     subject = forms.ModelChoiceField(label='Предмет',
 queryset=Subject.objects.none(), empty_label='Не выбран', required=False)

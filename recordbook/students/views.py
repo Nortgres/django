@@ -194,7 +194,7 @@ class Gradebook(DataMixin, ListView):
                     dates.add(sub.date)
             dates = sorted(dates)
             for st in selected_students:
-                marks: [''] * len(dates)
+                marks = [''] * len(dates)
                 for sub in st.gradebook_set.filter(subject=subject):
                     marks[dates.index(sub.date)] = sub.mark
                 studs.append((f'{st.last_name} {st.first_name[0]}.{st.middle_name[0]}.', marks))
