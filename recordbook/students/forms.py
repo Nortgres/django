@@ -69,7 +69,7 @@ queryset=Subject.objects.none(), empty_label='Не выбран', required=False
 
 class AddMarkForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, *kwargs)
+        super().__init__(*args, **kwargs)
         student = args[0]['student'] if args else None
         if student:
             student = Student.objects.filter(id=student)[0]
