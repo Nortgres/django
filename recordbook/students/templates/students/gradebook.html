@@ -26,8 +26,9 @@
         {% for st in studs %}
         <tr>
             <td>
-                <a href="{% url 'addmark' %}?student={{subject}}&date={% now 'd.m.Y' %}">
-                {{ st.1 }}
+                <a href="{% url 'addmark'
+        %}?student={{st.0}}&subject={{subject}}&date={% now 'd.m.Y' %}">
+                    {{ st.1 }}
                 </a>
             </td>
             {% for m in st.2 %}

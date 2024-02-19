@@ -10,7 +10,7 @@
                     {{ field.label_tag }}
                     {{ field }}
                 </p>
-                {% if field.error %}
+                {% if field.errors %}
                     <small class="error">{{ field.errors|striptags }}</small>
                 {% endif %}
             {% endfor %}
