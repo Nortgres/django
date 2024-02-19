@@ -9,7 +9,7 @@ from django.views.generic import ListView, DetailView, CreateView, DeleteView, U
 
 from .filters import StudentFilter
 from .forms import AddStudentForm, RegisterUserForm, LoginUserForm, FilterStudentForm, ChooseGroupForm, \
-    ChooseSubjectForm
+    ChooseSubjectForm, AddMarkForm
 from .models import Student
 from .utils import menu, DataMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -197,7 +197,7 @@ class Gradebook(DataMixin, ListView):
                 marks = [''] * len(dates)
                 for sub in st.gradebook_set.filter(subject=subject):
                     marks[dates.index(sub.date)] = sub.mark
-                studs.append((f'{st.last_name} {st.first_name[0]}.{st.middle_name[0]}.', marks))
+                studs.append((st.pk, f'{st.last_name} {st.first_name[0]}.{st.middle_name[0]}.', marks))
         c_def = self.get_user_context(title='Журнал успеваемости',
                                       auth=auth,
                                       group_form=ChooseGroupForm(self.request.GET),
@@ -212,3 +212,12 @@ class Gradebook(DataMixin, ListView):
         group = 0 if group == '' else group
         return Student.objects.filter(group=group)
 
+class AddMark(DataMixin, CreateView):
+    form_class = AddMarkForm
+    template_name = 'students/add_mark.html'
+    success_url = reverse_lazy('gradebook')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title="Добавить оценку", form=AddMarkForm(self.request.GET))
+        return {**context, **c_def}

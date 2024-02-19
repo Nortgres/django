@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
-from students.models import Group, Student, Subject
+from students.models import Group, Student, Subject, Gradebook
 
 
 #class AddStudentForm(forms.Form):
@@ -66,3 +66,15 @@ class ChooseSubjectForm(forms.Form):
 
     subject = forms.ModelChoiceField(label='Предмет',
 queryset=Subject.objects.none(), empty_label='Не выбран', required=False)
+
+class AddMarkForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, *kwargs)
+        student = args[0]['student'] if args else None
+        if student:
+            student = Student.objects.filter(id=student)[0]
+            self.fields['student'].queryset = Student.objects.filter(group=student.group)
+
+    class Meta:
+        model = Gradebook
+        fields = ['subject', 'student', 'date', 'mark']
