@@ -6,19 +6,19 @@ from rest_framework.parsers import JSONParser
 from .models import Student
 
 
-#class StudentSerializer(serializers.ModelSerializer):
-#    class Meta:
-#        model = Student
-#        fields = ('last_name', 'first_name')
+class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = ('last_name', 'first_name')
 
 class StudentModel:
     def __init__(self, first_name, last_name):
         self.first_name = first_name
         self.last_name = last_name
 
-class StudentSerializer(serializers.Serializer):
-    first_name = serializers.CharField(max_length=50)
-    last_name = serializers.CharField(max_length=50)
+#class StudentSerializer(serializers.Serializer):
+#    first_name = serializers.CharField(max_length=50)
+#    last_name = serializers.CharField(max_length=50)
 
 #def encode():
 #    model = StudentModel('Elon', 'Musk')
@@ -27,9 +27,9 @@ class StudentSerializer(serializers.Serializer):
 #    json = JSONRenderer().render(model_sr.data)
 #    print(json, type(json), sep='\n')
 
-def decode():
-    stream = io.BytesIO(b'{"first_name":"Elon","last_name":"Musk"}')
-    data = JSONParser().parse(stream)
-    serializer = StudentSerializer(data=data)
-    serializer.is_valid()
-    print(serializer.validated_data)
+#def decode():
+#    stream = io.BytesIO(b'{"first_name":"Elon","last_name":"Musk"}')
+#    data = JSONParser().parse(stream)
+#    serializer = StudentSerializer(data=data)
+#    serializer.is_valid()
+#    print(serializer.validated_data)
