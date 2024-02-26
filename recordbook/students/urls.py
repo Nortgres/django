@@ -7,8 +7,9 @@ from .views import groups, about, students, teachers, login, show_student, addst
 from .viewsets import StudentViewSet, GroupAPIView # StudentAPIView,  StudentAPIDetailView,
 from rest_framework import routers
 
-router = routers.DefaultRouter
+router = routers.DefaultRouter()
 router.register(r'students', StudentViewSet, basename='students')
+#router.register(r'groups', GroupAPIView, basename='groups')
 
 urlpatterns = [
 ##    path('', index, name='home'),
