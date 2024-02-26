@@ -1,9 +1,14 @@
-from django.contrib import admin
-from django.urls import path
 
+
+from django.contrib import admin
+from django.urls import path, include
 from .views import groups, about, students, teachers, login, show_student, addstudent, StudentHome, ShowStudent, \
     AddStudent, RegisterUser, LoginUser, logout_user, DeleteStudent, UpdateStudent, Gradebook, AddMark
-from .viewsets import StudentAPIView, GroupAPIView
+from .viewsets import StudentViewSet, GroupAPIView # StudentAPIView,  StudentAPIDetailView,
+from rest_framework import routers
+
+router = routers.DefaultRouter
+router.register(r'students', StudentViewSet, basename='students')
 
 urlpatterns = [
 ##    path('', index, name='home'),
@@ -23,6 +28,10 @@ urlpatterns = [
     path('student/<int:pk>/update/', UpdateStudent.as_view(), name="update_student"),
     path('gradebook/', Gradebook.as_view(), name='gradebook'),
     path('addmark/', AddMark.as_view(), name='addmark'),
-    path('api/v1/students/', StudentAPIView.as_view()),
+    #path('api/v1/students/', StudentAPIView.as_view()),
+    # path('api/v1/student/<int:pk>/', StudentAPIDetailView.as_view()),
     path('api/v1/groups/', GroupAPIView.as_view()),
+    #path('api/v1/students/', StudentViewSet.as_view({'get': 'list'})),
+    #path('api/v1/student/<int:pk>/', StudentViewSet.as_view({'put': 'update'})),
+    path('api/v1/', include(router.urls))
 ]

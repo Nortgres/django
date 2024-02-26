@@ -1,24 +1,32 @@
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import viewsets
 from django.forms import model_to_dict
 
 from .models import Student, Group
 from .serializers import StudentSerializer
 
 
-#class StudentAPIView(ListAPIView):
+class StudentViewSet(viewsets.ModelViewSet):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+
+#class StudentAPIView(ListCreateAPIView):
 #    queryset = Student.objects.all()
 #    serializer_class = StudentSerializer
+    #def get(self, request):
+    #    #return Response({'first_name': 'Alexander'})
+    #    st = Student.objects.all().values()
+    #    return Response({'students': list(st)})
 
-class StudentAPIView(APIView):
-    def get(self, request):
-        #return Response({'first_name': 'Alexander'})
-        st = Student.objects.all().values()
-        return Response({'students': list(st)})
+    #def post(self, request):
+    #    return Response({'first_name': 'Nastya'})
 
-    def post(self, request):
-        return Response({'first_name': 'Nastya'})
+#class StudentAPIDetailView(RetrieveUpdateDestroyAPIView):
+#    queryset = Student.objects.all()
+#    serializer_class = StudentSerializer
 
 class GroupAPIView(APIView):
     def get(self, request):
