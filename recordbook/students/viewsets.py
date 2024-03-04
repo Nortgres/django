@@ -1,3 +1,4 @@
+from rest_framework.decorators import action
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -5,12 +6,44 @@ from rest_framework import viewsets
 from django.forms import model_to_dict
 
 from .models import Student, Group
-from .serializers import StudentSerializer
+from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
+from .serializers import StudentSerializer, StudentDetailSerializer
+from .utils import StudentAPIPagination
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
 class StudentViewSet(viewsets.ModelViewSet):
-    queryset = Student.objects.all()
-    serializer_class = StudentSerializer
+    pagination_class = StudentAPIPagination
+    permission_classes = (IsOwnerOrReadOnly, )
+    #queryset = Student.objects.all()
+    #serializer_class = StudentSerializer
+
+    def get_queryset(self):
+        group = self.request.GET.get('group', '')
+        if group:
+            return Student.objects.filter(group_id=group)
+        else:
+            return Student.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return StudentDetailSerializer
+        return StudentSerializer
+
+    @action(methods=['get'], detail=False)
+    def groups(self, request):
+        groups = Group.objects.all()
+        return Response({'groups': [f'{gr.course}-{gr.name}' for gr in groups]})
+
+    @action(methods=['get'], detail=True)
+    def group(self, request, pk=None):
+        group = Group.objects.filter(pk=pk).first()
+        if group:
+            return Response({'group': f'{group.course}-{group.name}'})
+        else:
+            return Response({'group': 'Группа не найдена'})
+
+
 
 
 #class StudentAPIView(ListCreateAPIView):

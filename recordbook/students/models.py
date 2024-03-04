@@ -18,6 +18,7 @@ class Student(models.Model):
     photo = models.ImageField(verbose_name='Фото', upload_to="photos/%Y/%m/%d")
     group = models.ForeignKey('Group', on_delete=models.CASCADE, verbose_name='Группа', related_name='get_students')
     slug = models.SlugField(verbose_name='URL', max_length=255, unique=True, db_index=True)
+    user = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.CASCADE)
     objects = models.Manager()
 
     def __str__(self):

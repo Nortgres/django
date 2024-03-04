@@ -11,10 +11,23 @@ class StudentSerializer(serializers.ModelSerializer):
         model = Student
         fields = ('last_name', 'first_name', 'middle_name', 'group', 'slug')
 
+
 class StudentModel:
     def __init__(self, first_name, last_name):
         self.first_name = first_name
         self.last_name = last_name
+
+
+class StudentDetailSerializer(serializers.ModelSerializer):
+
+    group_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Student
+        fields = '__all__'
+
+    def get_group_name(self, obj):
+        return f'{obj.group.course}-{obj.group.name}'
 
 #class StudentSerializer(serializers.Serializer):
 #    first_name = serializers.CharField(max_length=50)
