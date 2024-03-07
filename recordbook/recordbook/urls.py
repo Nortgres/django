@@ -24,6 +24,7 @@ from recordbook import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('students.urls')),
+    path('api/v1/auth/', include('rest_framework.urls')),
     #path('groups/', groups),
 ]
 

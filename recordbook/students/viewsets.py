@@ -6,7 +6,7 @@ from rest_framework import viewsets
 from django.forms import model_to_dict
 
 from .models import Student, Group
-from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
+from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly, UserPermission
 from .serializers import StudentSerializer, StudentDetailSerializer
 from .utils import StudentAPIPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -14,7 +14,8 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 class StudentViewSet(viewsets.ModelViewSet):
     pagination_class = StudentAPIPagination
-    permission_classes = (IsOwnerOrReadOnly, )
+    #permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly, )
+    permission_classes = (UserPermission, )
     #queryset = Student.objects.all()
     #serializer_class = StudentSerializer
 
