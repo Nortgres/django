@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from recordbook import settings
 
-#from students.views import index, groups
+# from students.views import index, groups
 
 urlpatterns = [
     path('admin/', admin.site.urls),
