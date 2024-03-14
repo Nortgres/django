@@ -97,8 +97,10 @@ class Subject(models.Model):
     class Meta:
         verbose_name = 'Предмет'
         verbose_name_plural = 'Предметы'
+
     def __str__(self):
         return self.name
+
 
 class Gradebook(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, verbose_name='Предмет')

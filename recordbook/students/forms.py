@@ -5,8 +5,7 @@ from django.core.exceptions import ValidationError
 
 from students.models import Group, Student, Subject, Gradebook
 
-
-#class AddStudentForm(forms.Form):
+# class AddStudentForm(forms.Form):
 #    last_name = forms.CharField(label='Фамилия', max_length=50)
 #    first_name = forms.CharField(label='Имя', max_length=50)
 #    middle_name = forms.CharField(label='Отчество', max_length=50)
@@ -15,6 +14,7 @@ from students.models import Group, Student, Subject, Gradebook
 #    is_study = forms.BooleanField(label='Учится', required=False, initial=True)
 #    group = forms.ModelChoiceField(label='Группа', queryset=Group.objects.all(), empty_label='Не выбрана')
 #    slug = forms.SlugField(label='URL', max_length=255)
+
 
 class AddStudentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -26,20 +26,22 @@ class AddStudentForm(forms.ModelForm):
         if not first_name.isalpha():
             raise ValidationError('Недопустимые символы')
         return first_name
+
     class Meta:
         model = Student
-        #fields = '__all__'
+        # fields = '__all__'
         fields = ['last_name', 'first_name', 'middle_name', 'email', 'birth_date', 'is_study', 'photo', 'group', 'slug']
+
 
 class RegisterUserForm(UserCreationForm):
     username = forms.CharField(label='Логин')
     email = forms.EmailField(label='E-mail')
     password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput())
     password2 = forms.CharField(label='Повтор пароля', widget=forms.PasswordInput())
+
     class Meta:
         model = User
         fields = ('username', 'password1', 'password2')
-
 
 
 class LoginUserForm(AuthenticationForm):
@@ -52,9 +54,10 @@ class FilterStudentForm(forms.Form):
     first_name = forms.CharField(label='Имя', max_length=50, required=False)
     group = forms.ModelChoiceField(label='Группа', queryset=Group.objects.all(), empty_label='', required=False)
 
+
 class ChooseGroupForm(forms.Form):
-    group = forms.ModelChoiceField(label='Группа',
-queryset=Group.objects.all(), empty_label='Не выбрана', required=False)
+    group = forms.ModelChoiceField(label='Группа', queryset=Group.objects.all(), empty_label='Не выбрана', required=False)
+
 
 class ChooseSubjectForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -64,8 +67,8 @@ class ChooseSubjectForm(forms.Form):
             group = Group.objects.filter(id=self.group)[0]
             self.fields['subject'].queryset = group.subject_set.all()
 
-    subject = forms.ModelChoiceField(label='Предмет',
-queryset=Subject.objects.none(), empty_label='Не выбран', required=False)
+    subject = forms.ModelChoiceField(label='Предмет', queryset=Subject.objects.none(), empty_label='Не выбран', required=False)
+
 
 class AddMarkForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

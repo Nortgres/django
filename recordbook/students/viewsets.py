@@ -1,23 +1,23 @@
 from rest_framework.decorators import action
-from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateAPIView, RetrieveUpdateDestroyAPIView
+# from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import viewsets
 from django.forms import model_to_dict
 
 from .models import Student, Group
-from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly, UserPermission
+from .permissions import UserPermission  # IsAdminOrReadOnly, IsOwnerOrReadOnly
 from .serializers import StudentSerializer, StudentDetailSerializer
 from .utils import StudentAPIPagination
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+# from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
 class StudentViewSet(viewsets.ModelViewSet):
     pagination_class = StudentAPIPagination
-    #permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly, )
+    # permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly, )
     permission_classes = (UserPermission, )
-    #queryset = Student.objects.all()
-    #serializer_class = StudentSerializer
+    # queryset = Student.objects.all()
+    # serializer_class = StudentSerializer
 
     def get_queryset(self):
         group = self.request.GET.get('group', '')
@@ -44,28 +44,27 @@ class StudentViewSet(viewsets.ModelViewSet):
         else:
             return Response({'group': 'Группа не найдена'})
 
-
-
-
-#class StudentAPIView(ListCreateAPIView):
+# class StudentAPIView(ListCreateAPIView):
 #    queryset = Student.objects.all()
 #    serializer_class = StudentSerializer
-    #def get(self, request):
+    # def get(self, request):
     #    #return Response({'first_name': 'Alexander'})
     #    st = Student.objects.all().values()
     #    return Response({'students': list(st)})
 
-    #def post(self, request):
+    # def post(self, request):
     #    return Response({'first_name': 'Nastya'})
 
-#class StudentAPIDetailView(RetrieveUpdateDestroyAPIView):
+# class StudentAPIDetailView(RetrieveUpdateDestroyAPIView):
 #    queryset = Student.objects.all()
 #    serializer_class = StudentSerializer
+
 
 class GroupAPIView(APIView):
     def get(self, request):
         gr = Group.objects.all().values()
         return Response({'groups': list(gr)})
+
     def post(self, request):
         new_gr = Group.objects.create(
             name=request.data['name'],

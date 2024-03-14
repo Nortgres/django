@@ -1,12 +1,9 @@
-from typing import Tuple
-
 from django.contrib import admin
 from .models import Student, Group, Subject, Teacher, Gradebook
 
-# Register your models here.
-
-#admin.site.register(Student)
+# admin.site.register(Student)
 admin.site.register(Group)
+
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
@@ -17,7 +14,8 @@ class StudentAdmin(admin.ModelAdmin):
     list_filter = ('is_study', 'created_at')
     prepopulated_fields = {"slug": ("last_name", )}
 
-#admin.site.register(Student, StudentAdmin)
+# admin.site.register(Student, StudentAdmin)
+
 
 @admin.register(Teacher)
 class TeacherAdmin(admin.ModelAdmin):
@@ -26,11 +24,13 @@ class TeacherAdmin(admin.ModelAdmin):
     search_fields = ('last_name', 'first_name')
     prepopulated_fields = {"slug": ("last_name",)}
 
+
 @admin.register(Subject)
 class SubjectAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'teacher')
     list_display_links = ('id', 'name')
     search_fields = ('name',)
+
 
 @admin.register(Gradebook)
 class GradebookAdmin(admin.ModelAdmin):
