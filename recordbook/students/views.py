@@ -1,18 +1,17 @@
 from django.contrib.auth import logout, login
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.views import LoginView
 from django.shortcuts import render, get_object_or_404, redirect
-# Create your views here.
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
-
 from .filters import StudentFilter
 from .forms import AddStudentForm, RegisterUserForm, LoginUserForm, FilterStudentForm, ChooseGroupForm, \
     ChooseSubjectForm, AddMarkForm
 from .models import Student
 from .utils import menu, DataMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
+'''
+#from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 #menu = [{'title': "О сайте", 'url_name': 'about'},
 #        {'title': "Студенты", 'url_name': 'students'},
@@ -29,25 +28,33 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 ##    }
 ##    return render(request, 'students/index.html', context=context)
     #return render(request, 'students/index.html', {'students': students, 'menu': menu, 'title': 'Главная страница'})
+    '''
+
+
 def groups(request, group):
     if request.GET:
         print(request.GET)
-    #if request.POST:
+#    if request.POST:
     #    print(request.POST)
     return HttpResponse(f"<h1>Список студентов по группам.\
                         </h1><h2>{group}</h2>")
 
+
 def about(request):
     return render(request, 'students/about.html', {'menu': menu, 'title': 'О сайте'})
+
 
 def students(request):
     return HttpResponse("Студенты")
 
+
 def teachers(request):
     return HttpResponse("Преподаватели")
 
+
 #def login(request):
 #    return HttpResponse("Авторизация")
+
 
 def show_student(request, stud_slug):
     #return HttpResponse(f"Отображение студента с id = {stud_id}")
@@ -58,6 +65,8 @@ def show_student(request, stud_slug):
         'menu': menu,
     }
     return render(request, 'students/student.html', context=context)
+
+
 
 def addstudent(request):
     if request.method == 'POST':
@@ -73,6 +82,7 @@ def addstudent(request):
     else:
         form = AddStudentForm()
     return render(request, 'students/addstudent.html', {'form': form})
+
 
 class StudentHome(DataMixin, ListView):
     model = Student
@@ -117,16 +127,20 @@ class ShowStudent(DataMixin, DetailView):
         auth = self.request.user.is_authenticated
         c_def = self.get_user_context(title='Главная страница', auth=auth)
         return {**context, **c_def}
+
+
 class AddStudent(LoginRequiredMixin, CreateView):
     form_class = AddStudentForm
     template_name = 'students/addstudent.html'
     success_url = reverse_lazy('home')
     login_url = reverse_lazy('home')
 
+
 class RegisterUser(DataMixin, CreateView):
     form_class = RegisterUserForm
     template_name = 'students/register.html'
     success_url = reverse_lazy('login')
+
     def get_context_data(self,*, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title="Регистрация")
@@ -146,12 +160,15 @@ class LoginUser(DataMixin, LoginView):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title="Авторизация")
         return {**context, **c_def}
+
     def get_success_url(self):
         return reverse_lazy('home')
+
 
 def logout_user(request):
     logout(request)
     return redirect('login')
+
 
 class DeleteStudent(LoginRequiredMixin, DataMixin, DeleteView):
     model = Student
@@ -175,6 +192,7 @@ class UpdateStudent(LoginRequiredMixin, DataMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title='Изменить студента')
         return {**context, **c_def}
+
 
 class Gradebook(DataMixin, ListView):
     template_name = 'students/gradebook.html'
@@ -207,10 +225,12 @@ class Gradebook(DataMixin, ListView):
                                       dates=dates,
                                       studs=studs)
         return {**context, **c_def}
+
     def get_queryset(self):
         group = self.request.GET.get('group')
         group = 0 if group == '' else group
         return Student.objects.filter(group=group)
+
 
 class AddMark(DataMixin, CreateView):
     form_class = AddMarkForm
