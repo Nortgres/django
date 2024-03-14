@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
 from .filters import StudentFilter
-from .forms import AddStudentForm, RegisterUserForm, LoginUserForm, FilterStudentForm, ChooseGroupForm, \
+from .forms import AddStudentForm, RegisterUserForm, LoginUserForm, ChooseGroupForm, \
     ChooseSubjectForm, AddMarkForm
 from .models import Student
 from .utils import menu, DataMixin
@@ -52,12 +52,12 @@ def teachers(request):
     return HttpResponse("Преподаватели")
 
 
-#def login(request):
+# def login(request):
 #    return HttpResponse("Авторизация")
 
 
 def show_student(request, stud_slug):
-    #return HttpResponse(f"Отображение студента с id = {stud_id}")
+    # return HttpResponse(f"Отображение студента с id = {stud_id}")
     student = get_object_or_404(Student, slug=stud_slug)
 
     context = {
@@ -67,18 +67,17 @@ def show_student(request, stud_slug):
     return render(request, 'students/student.html', context=context)
 
 
-
 def addstudent(request):
     if request.method == 'POST':
         form = AddStudentForm(request.POST, request.FILES)
         if form.is_valid():
-            #print(form.cleaned_data)
-                #try:
-                    #Student.objects.create(**form.cleaned_data)
-                    form.save()
-                    return redirect('home')
-                #except:
-                #    form.add_error(None, 'Ошибка!')
+            # print(form.cleaned_data)
+            # try:
+            # Student.objects.create(**form.cleaned_data)
+            form.save()
+            return redirect('home')
+            # except:
+            #    form.add_error(None, 'Ошибка!')
     else:
         form = AddStudentForm()
     return render(request, 'students/addstudent.html', {'form': form})
@@ -95,7 +94,7 @@ class StudentHome(DataMixin, ListView):
         auth = self.request.user.is_authenticated
         queryset = self.get_queryset()
         st_filter = StudentFilter(self.request.GET, queryset)
-        #c_def = self.get_user_context(title='Главная страница', auth=auth, form=FilterStudentForm(self.request.GET))
+        # c_def = self.get_user_context(title='Главная страница', auth=auth, form=FilterStudentForm(self.request.GET))
         c_def = self.get_user_context(title='Главная страница', auth=auth, st_filter=st_filter)
         return {**context, **c_def}
 
@@ -103,18 +102,19 @@ class StudentHome(DataMixin, ListView):
         queryset = super().get_queryset()
         st_filter = StudentFilter(self.request.GET, queryset)
         return st_filter.qs
-        #filters = {}
-        #first_name = self.request.GET.get('first_name')
-        #last_name = self.request.GET.get('last_name')
-        #group = self.request.GET.get('group')
-        #if first_name:
+        # filters = {}
+        # first_name = self.request.GET.get('first_name')
+        # last_name = self.request.GET.get('last_name')
+        # group = self.request.GET.get('group')
+        # if first_name:
         #    filters['first_name__contains'] = first_name  #__contains - содержит
-        #if last_name:
+        # if last_name:
         #    filters['last_name__contains'] = last_name
-        #if group:
+        # if group:
         #    filters['group'] = group
-        #new_context = Student.objects.filter(**filters)
-        #return new_context
+        # new_context = Student.objects.filter(**filters)
+        # return new_context
+
 
 class ShowStudent(DataMixin, DetailView):
     model = Student
@@ -141,7 +141,7 @@ class RegisterUser(DataMixin, CreateView):
     template_name = 'students/register.html'
     success_url = reverse_lazy('login')
 
-    def get_context_data(self,*, object_list=None, **kwargs):
+    def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title="Регистрация")
         return {**context, **c_def}
