@@ -1,3 +1,6 @@
+from datetime import datetime
+import pytz
+
 from django.test import TestCase, Client
 from django.urls import reverse
 from rest_framework import status
@@ -47,7 +50,7 @@ class StudentsApiTestCase(APITestCase):
 
     def test_get_detail(self):
         response = self.client.get(self.student_url)
-        #print(f'{response.data=}')
+        # print(f'{response.data=}')
         serializer_data = StudentDetailSerializer(self.student1).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(serializer_data, response.data)
@@ -120,17 +123,32 @@ class StudentsSerializerTestCase(TestCase):
         self.assertEqual(expected_data, serializer_data)
 
     def test_student_detail_serializer(self):
-        serializer_data = StudentDetailSerializer([self.student1]).data
-        print(f'{serializer_data}')
+        serializer_data = StudentDetailSerializer(self.student1).data
+        created_at_utc = self.student1.created_at.replace(tzinfo=pytz.utc)
+        created_at = (str(created_at_utc.astimezone(pytz.timezone('Europe/Moscow')))).replace(' ', 'T')
+        # created_at = self.student1.created_at.astimezone(pytz.timezone('Europe/Moscow')).strftime('%Y-%m-%dT%H:%M:%S.%f%z')
+        updated_at_utc = self.student1.created_at.replace(tzinfo=pytz.utc)
+        updated_at = (str(updated_at_utc.astimezone(pytz.timezone('Europe/Moscow')))).replace(' ', 'T')
+        # updated_at = self.student1.updated_at.astimezone(pytz.timezone('Europe/Moscow')).strftime('%Y-%m-%dT%H:%M:%S.%f%z')
+        # print(f'{updated_at}')
         expected_data = [
             {
-                'last_name': 'Зернов',
+                'id': 1,
+                'group_name': '1-43',
                 'first_name': 'Иван',
+                'last_name': 'Зернов',
                 'middle_name': 'Иванович',
                 'email': 'ivan@mail.ru',
-                'group': '1-43',
-                'slug': 'zernov',
+                'birth_date': '2000-01-01',
+                'created_at': created_at,
+                'updated_at': updated_at,
+                'is_study': True,
                 'photo': None,
+                'slug': 'zernov',
+                'group': 1,
+                'user': 1
             }
         ]
-        self.assertEqual(expected_data, serializer_data)
+        # print(f'{expected_data[0]}')
+        # print(f'{serializer_data}')
+        self.assertEqual(expected_data[0], serializer_data)
