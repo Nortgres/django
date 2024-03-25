@@ -1,5 +1,6 @@
 from datetime import datetime
 import pytz
+from django.contrib.auth import get_user_model
 
 from django.test import TestCase, Client
 from django.urls import reverse
@@ -8,6 +9,9 @@ from rest_framework.test import APITestCase
 from django.contrib.auth.models import User
 from students.models import Student, Group
 from students.serializers import StudentSerializer, StudentDetailSerializer
+from django.test import SimpleTestCase
+from django.urls import reverse, resolve
+from students.views import teachers, StudentHome, ShowStudent
 
 '''def calc(a, b, c):
     if c == '+':
@@ -152,3 +156,77 @@ class StudentsSerializerTestCase(TestCase):
         # print(f'{expected_data[0]}')
         # print(f'{serializer_data}')
         self.assertEqual(expected_data[0], serializer_data)
+
+
+class TestUrls(SimpleTestCase):
+
+    def test_list_url_teachers(self):
+        url = reverse('teachers')
+        self.assertEqual(resolve(url).func, teachers)
+
+    def test_list_url_home(self):
+        url = reverse('home')
+        self.assertEqual(resolve(url).func.view_class, StudentHome)
+
+    def test_list_students(self):
+        url = reverse('student', args=['smirnov145'])
+        # print(resolve(url), resolve(url).func.view_class)
+        # print(url)
+        self.assertEqual(resolve(url).func.view_class, ShowStudent)
+
+
+class BasicTests(TestCase):
+    def setUp(self):
+        self.user1 = get_user_model().objects.create_user(
+            username='testuser',
+            email='test@email.com',
+            password='secret')
+
+        self.group1 = Group.objects.create(
+            name='43',
+            course='1',
+            enrollment_year='2023')
+
+        self.student1 = Student.objects.create(
+            first_name='Иван',
+            last_name='Зернов',
+            middle_name='Иванович',
+            email='ivan@mail.ru',
+            group_id=self.group1.id,
+            slug='zernov',
+            user=self.user1)
+
+        self.updatestudent_url = reverse('update_student', args=['1'])
+        self.addstudent_url = reverse('addstudent')
+
+    def test_string_representation(self):
+        group = Group(
+            name='44',
+            course='2',
+            enrollment_year='2022'
+        )
+        self.assertEqual(str(group), f'{group.course}-{group.name}')
+
+    def test_group_content(self):
+        self.assertEqual(f'{self.group1.name}', '43')
+        self.assertEqual(f'{self.group1.course}', '1')
+        self.assertEqual(f'{self.group1.enrollment_year}', '2023')
+
+    def test_students_list_view(self):
+        response = self.client.get(reverse('home'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Иван')
+        self.assertContains(response, 'ЗЕРНОВ')
+        # print(response.rendered_content)
+        self.assertTemplateUsed(response, 'students/index.html')
+
+    def test_student_detail_view(self):
+        response = self.client.get('/student/zernov/')
+        no_response = self.client.get('/student/grubov/')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(no_response.status_code, 404)
+        self.assertContains(response, 'Иван')
+        self.assertTemplateUsed(response, 'students/student.html')
+
+    def test_get_absolute_url(self):
+        self.assertEqual(self.student1.get_absolute_url(), '/student/zernov/')

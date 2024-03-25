@@ -5,6 +5,8 @@ from django.core.exceptions import ValidationError
 
 from students.models import Group, Student, Subject, Gradebook
 
+
+
 # class AddStudentForm(forms.Form):
 #    last_name = forms.CharField(label='Фамилия', max_length=50)
 #    first_name = forms.CharField(label='Имя', max_length=50)
@@ -81,3 +83,4 @@ class AddMarkForm(forms.ModelForm):
     class Meta:
         model = Gradebook
         fields = ['subject', 'student', 'date', 'mark']
+
