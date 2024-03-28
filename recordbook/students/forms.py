@@ -17,7 +17,6 @@ from students.models import Group, Student, Subject, Gradebook
 #    group = forms.ModelChoiceField(label='Группа', queryset=Group.objects.all(), empty_label='Не выбрана')
 #    slug = forms.SlugField(label='URL', max_length=255)
 
-
 class AddStudentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

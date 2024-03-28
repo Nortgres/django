@@ -1,8 +1,9 @@
 from django.contrib.auth import logout, login
+from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
 from .filters import StudentFilter
 from .forms import AddStudentForm, RegisterUserForm, LoginUserForm, ChooseGroupForm, \
@@ -129,11 +130,18 @@ class ShowStudent(DataMixin, DetailView):
         return {**context, **c_def}
 
 
-class AddStudent(LoginRequiredMixin, CreateView):
+class AddStudent(LoginRequiredMixin, DataMixin, CreateView):
     form_class = AddStudentForm
     template_name = 'students/addstudent.html'
-    success_url = reverse_lazy('home')
     login_url = reverse_lazy('home')
+    raise_exception = True
+
+    def form_valid(self, form):
+        student = form.save(commit=False)
+        student.user = User.objects.get(username=self.request.user)
+        student.save()
+        #print('TEST ADD FV', student)
+        return redirect(reverse('home'))
 
 
 class RegisterUser(DataMixin, CreateView):
@@ -193,6 +201,12 @@ class UpdateStudent(LoginRequiredMixin, DataMixin, UpdateView):
         c_def = self.get_user_context(title='Изменить студента')
         return {**context, **c_def}
 
+    def form_valid(self, form):
+        student = form.save(commit=False)
+        student.user = User.objects.get(username=self.request.user)
+        student.save()
+        #print('TEST ADD FV', student)
+        return redirect(reverse('home'))
 
 class Gradebook(DataMixin, ListView):
     template_name = 'students/gradebook.html'

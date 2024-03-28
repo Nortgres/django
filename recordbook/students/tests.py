@@ -245,11 +245,41 @@ class BasicTests(TestCase):
                 'group': self.group1.id,
                 'slug': 'smirnova',
                 'photo': pict,
-                'user': self.user1.id
+                'user': self.user1
             }
+            #print(data)
             response = self.client.post(self.addstudent_url, data)
-            print(response)
+            #print(response)
         self.assertEqual(status.HTTP_302_FOUND, response.status_code)
+        #print(Student.objects.all())
         self.assertEqual(Student.objects.filter(last_name='Смирнова').count(), 1)
         self.assertEqual(Student.objects.get(slug='smirnova').last_name, 'Смирнова')
         self.assertEqual(Student.objects.all().count(), 2)
+
+    def test_student_update_view(self):
+        self.client.force_login(self.user1)
+        with open('students/static/students/images/logo_zoloto_old.png', 'rb') as pict:
+            data = {
+                'first_name': 'Екатерина',
+                'last_name': 'Смирнова',
+                'middle_name': 'Николаевна',
+                'email': 'katya@mail.ru',
+                'birth_date': '2000-10-18',
+                'is_study': True,
+                'group': self.group1.id,
+                'slug': 'smirnova',
+                'photo': pict,
+                'user': self.user1
+            }
+            response = self.client.post(self.addstudent_url, data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Student.objects.last().last_name, 'Смирнова')
+        self.assertEqual(Student.objects.get(slug='smirnova').last_name, 'Смирнова')
+
+    def test_post_delete_view(self):
+        self.client.force_login(self.user1)
+        self.assertEqual(Student.objects.all().count(), 1)
+        response = self.client.post(
+            reverse('delete_student', args='1'))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Student.objects.all().count(), 0)
