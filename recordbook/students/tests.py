@@ -230,3 +230,26 @@ class BasicTests(TestCase):
 
     def test_get_absolute_url(self):
         self.assertEqual(self.student1.get_absolute_url(), '/student/zernov/')
+
+    def test_student_create_view(self):
+        self.client.force_login(self.user1)
+        self.assertEqual(Student.objects.all().count(), 1)
+        with open('students/static/students/images/logo_zoloto_old.png', 'rb') as pict:
+            data = {
+                'first_name': 'Екатерина',
+                'last_name': 'Смирнова',
+                'middle_name': 'Николаевна',
+                'email': 'katya@mail.ru',
+                'birth_date': '2000-10-18',
+                'is_study': True,
+                'group': self.group1.id,
+                'slug': 'smirnova',
+                'photo': pict,
+                'user': self.user1.id
+            }
+            response = self.client.post(self.addstudent_url, data)
+            print(response)
+        self.assertEqual(status.HTTP_302_FOUND, response.status_code)
+        self.assertEqual(Student.objects.filter(last_name='Смирнова').count(), 1)
+        self.assertEqual(Student.objects.get(slug='smirnova').last_name, 'Смирнова')
+        self.assertEqual(Student.objects.all().count(), 2)
