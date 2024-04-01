@@ -219,6 +219,7 @@ class BasicTests(TestCase):
         self.assertContains(response, 'ЗЕРНОВ')
         # print(response.rendered_content)
         self.assertTemplateUsed(response, 'students/index.html')
+        self.assertEqual(f'{self.student1}', 'Зернов')
 
     def test_student_detail_view(self):
         response = self.client.get('/student/zernov/')
@@ -279,7 +280,13 @@ class BasicTests(TestCase):
     def test_post_delete_view(self):
         self.client.force_login(self.user1)
         self.assertEqual(Student.objects.all().count(), 1)
+        response = self.client.get(
+            reverse('delete_student', args='1')
+        )
+        self.assertContains(response, 'Удалить студента')
         response = self.client.post(
             reverse('delete_student', args='1'))
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Student.objects.all().count(), 0)
+
+
